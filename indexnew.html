@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texas Veterans Commission - Interactive Claims Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- WaitWell Stylesheet Integration -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for beautiful elements */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Bouncing loading animation */
+        .dot-flashing {
+            position: relative;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: #0284c7;
+            color: #0284c7;
+            animation: dot-flashing 1s infinite linear alternate;
+            animation-delay: .5s;
+        }
+        .dot-flashing::before, .dot-flashing::after {
+            content: '';
+            display: inline-block;
+            position: absolute;
+            top: 0;
+        }
+        .dot-flashing::before {
+            left: -15px;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: #0284c7;
+            color: #0284c7;
+            animation: dot-flashing 1s infinite linear alternate;
+            animation-delay: 0s;
+        }
+        .dot-flashing::after {
+            left: 15px;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: #0284c7;
+            color: #0284c7;
+            animation: dot-flashing 1s infinite linear alternate;
+            animation-delay: 1s;
+        }
+        @keyframes dot-flashing {
+            0% { background-color: #0284c7; }
+            50%, 100% { background-color: #e2e8f0; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+    <!-- Custom Modal Overlay -->
+    <div id="customModalOverlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 space-y-4 transform scale-95 transition-all">
+            <div class="flex items-center gap-3">
+                <div id="modalIconContainer" class="w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0">
+                    <!-- Icon loaded dynamically -->
+                </div>
+                <div>
+                    <h3 id="modalTitle" class="font-extrabold text-slate-900 text-sm">Notification</h3>
+                    <p id="modalMessage" class="text-xs text-slate-500 mt-1 leading-relaxed"></p>
+                </div>
+            </div>
+            <div class="flex justify-end pt-2">
+                <button onclick="closeCustomModal()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-4 py-2 rounded-lg shadow-sm transition-colors">
+                    Dismiss
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header / Banner Section -->
+    <header class="bg-[#0A2540] text-white border-b-4 border-amber-500 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+		 <div className="flex items-center gap-3">
+                <div className="bg-slate-900/80 p-2.5 rounded-lg shadow-inner flex items-center justify-center">
+                  <img
+                    src="https://tvc.texas.gov/wp-content/uploads/2023/02/texas-veterans-commission-logo-white.png"
+                    alt="Texas Veterans Commission logo"
+                    className="h-12 w-auto"
+                    style="max-height: 10rem;"
+                  />
+                </div>
+              </div>
+            <div class="flex items-center gap-4">
+                <!-- TVC Inspired Badge Logo -->
+                
+                <div>
+                    <h1 class="text-2xl md:text-2xl font-extrabold tracking-tight flex items-center gap-2">
+                        <span class="text-4xl bg-amber-500 text-slate-950 px-2 py-0.5 rounded font-bold uppercase tracking-widest hidden sm:inline-block">Accredited Portal</span>
+                    </h1>
+                    <p class="text-xs md:text-sm text-slate-300 font-medium">Claims Department Advisory Portal • Reference Manual Guide</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 self-stretch md:self-auto justify-between md:justify-end border-t border-slate-700 md:border-0 pt-3 md:pt-0">
+                <div class="text-left md:text-right hidden sm:block">
+                    <span class="text-xs text-slate-400 block">Current Manual Version</span>
+                    <span class="text-sm font-semibold text-amber-400">JUL 2025 (FINAL)</span>
+                </div>
+                <div class="h-8 w-px bg-slate-700 hidden sm:block"></div>
+                <!-- Dynamic Search Manual -->
+                <div class="relative w-full sm:w-64">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs"></i>
+                    </span>
+                    <input type="text" id="manualSearch" onkeyup="searchManual()" placeholder="Search entire manual..." class="w-full pl-9 pr-4 py-2 bg-slate-800/80 border border-slate-700 rounded-lg text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation / Tabs Menu -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="flex space-x-1 overflow-x-auto py-2 scrollbar-none md:justify-start">
+                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all duration-150 bg-sky-50 text-sky-800">
+                    <i class="fa-solid fa-table-columns text-base"></i> Advisor Dashboard
+                </button>
+                <button onclick="switchTab('chapters')" id="tab-chapters" class="tab-btn px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all duration-150 text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-book-open text-base"></i> Interactive Manual
+                </button>
+                <button onclick="switchTab('stepper')" id="tab-stepper" class="tab-btn px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all duration-150 text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-route text-base"></i> 8-Step Claims Process
+                </button>
+                <button onclick="switchTab('vamath')" id="tab-vamath" class="tab-btn px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all duration-150 text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-calculator text-base"></i> VA Math Calculator
+                </button>
+                <button onclick="switchTab('forms')" id="tab-forms" class="tab-btn px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all duration-150 text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-file-invoice text-base"></i> Forms & CFR Index
+                </button>
+                <button onclick="switchTab('ai-advisor')" id="tab-ai-advisor" class="tab-btn px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all duration-150 text-slate-600 hover:bg-slate-100 bg-[#184FA2]/10 hover:bg-[#184FA2]/20 text-[#184FA2]">
+                    <i class="fa-solid fa-compass text-base text-[#184FA2]"></i> Patriots Compass <span class="bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase animate-pulse">Bot</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 sm:px-6 lg:px-8">
+
+        <!-- Banner Notification -->
+        <div class="mb-6 bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex gap-3">
+                <i class="fa-solid fa-circle-info text-blue-600 text-lg mt-0.5"></i>
+                <div>
+                    <h4 class="font-semibold text-blue-900 text-sm">TVC Claims Department Policy Alert</h4>
+                    <p class="text-xs text-blue-700 mt-0.5">All Claims Benefit Advisors (CBAs) must utilize the new PACT Act provisions under 38 CFR Part 3. Be sure to establish an Intent to File (VA Form 21-0966) immediately.</p>
+                </div>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-xs font-bold text-blue-600 hover:text-blue-800 whitespace-nowrap bg-white px-3 py-1.5 rounded-md border border-blue-200 hover:bg-blue-50">Acknowledge</button>
+        </div>
+
+        <!-- SEARCH RESULTS CONTAINER (Overlays standard sections if search text exists) -->
+        <div id="searchResultsSection" class="hidden mb-6 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-amber-500"></i> Search Results (<span id="searchResultCount">0</span> matches)
+                </h3>
+                <button onclick="clearManualSearch()" class="text-xs font-bold text-rose-600 hover:text-rose-800 flex items-center gap-1">
+                    <i class="fa-solid fa-xmark"></i> Clear Search
+                </button>
+            </div>
+            <div id="searchResultList" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                <!-- Dynamically filled search results -->
+            </div>
+        </div>
+
+        <!-- 1. DASHBOARD TAB -->
+        <div id="section-dashboard" class="tab-section space-y-6">
+            <!-- Hero Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Accredited Advisors</span>
+                            <a href="https://www.va.gov/get-help-from-accredited-representative/find-rep/" class="text-2xl font-extrabold text-slate-900 mt-1 block">80+ Advisors</a>
+                            <span class="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+                                <i class="fa-solid fa-location-dot"></i> Statewide Coverage
+                            </span>
+                        </div>
+                        <div class="bg-sky-50 text-sky-600 p-3 rounded-xl">
+                            <i class="fa-solid fa-user-shield text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Key Authority CFR</span>
+                            <a href="https://www.ecfr.gov/current/title-38" target="_blank" class="text-2xl font-extrabold text-slate-900 mt-1 block">Title 38 CFR</a>
+                            <span class="text-xs text-blue-600 font-semibold mt-1 flex items-center gap-1">
+                                <i class="fa-solid fa-gavel"></i> Part 3 Adjudications
+                            </span>
+                        </div>
+                        <div class="bg-blue-50 text-blue-600 p-3 rounded-xl">
+                            <i class="fa-solid fa-scale-balanced text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-blue-100 border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">System Access</span>
+                            <a href= "https://citrixaccess.va.gov/vpn/index_citrix_splash.html" target="_blank" class="text-2xl font-extrabold text-slate-900 mt-1 block">CITRIX</a>
+                            <span class="text-xs text-amber-600 font-semibold mt-1 flex items-center gap-1">
+                                <i class="fa-solid fa-network-wired"></i> Secure VA Access
+                            </span>
+                        </div>
+                        <div class="bg-amber-50 text-amber-700 p-3 rounded-xl">
+                            <i class="fa-solid fa-database text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-red-100 border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Appeals Level Option</span>
+                            <a href= "https://app.waitwell.us/login?target=%2Fqueue" target="_blank" class="text-2xl font-extrabold text-slate-900 mt-1 block">Waitwell</a>
+                            <span class="text-xs text-indigo-600 font-semibold mt-1 flex items-center gap-1">
+                                <i class="fa-solid fa-shield-halved"></i> Modern Booking System
+                            </span>
+                        </div>
+                        <div class="bg-indigo-50 text-indigo-600 p-3 rounded-xl">
+                            <i class="fa-solid fa-calendar  text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome & Core Duties -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Welcome & Mission Card -->
+                <div class="lg:col-span-2 bg-[#0A2540] text-white rounded-2xl p-6 shadow-md relative overflow-hidden flex flex-col justify-between">
+                    <!-- Abstract Background Graphic -->
+                    <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none transform translate-y-12 translate-x-12">
+                        <i class="fa-solid fa-star text-9xl"></i>
+                    </div>
+                    <div>
+                        <span class="bg-amber-500 text-slate-950 text-[22px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-widest inline-block mb-3">STATE DECREE</span>
+                        <h2 class="text-3xl font-extrabold tracking-tight">Texas Veterans Commission Claims Division</h2>
+                        <p class="text-slate-300 mt-3 text-xl leading-relaxed">
+                            Formed by the Texas Government Code Chapter 434 and governed by the Texas Sunset Act, TVC represents Texas Veterans, their families, and survivors before the United States Department of Veterans Affairs (VA). Our Claims Benefit Advisors (CBAs) are located across the state in regional offices, clinics, and military bases to prepare and submit high-quality, fully-developed claims.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-700 text-center">
+                        <div>
+                            <h5 class="text-amber-400 font-bold text-lg">1.7M+</h5>
+                            <p class="text-xs text-slate-400 mt-1">Texas Veterans</p>
+                        </div>
+                        <div>
+                            <h5 class="text-amber-400 font-bold text-lg">80+</h5>
+                            <p class="text-xs text-slate-400 mt-1">Accredited CBAs</p>
+                        </div>
+                        <div>
+                            <h5 class="text-amber-400 font-bold text-lg">100%</h5>
+                            <p class="text-xs text-slate-400 mt-1">Veteran Focused</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Quick Checklist Generator Widget -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-sky-600"></i> Dynamic Checklist Builder
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-1">Generate a structured checklist based on your Veteran's filing goals.</p>
+                        
+                        <div class="mt-4">
+                            <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Select Claim Type</label>
+                            <select id="checklistTypeSelect" onchange="generateDynamicChecklist()" class="w-full mt-1.5 p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <option value="compensation">Disability Compensation (21-526EZ)</option>
+                                <option value="pension">VA Pension Benefit (21P-527EZ)</option>
+                                <option value="survivor">Survivor Benefits (DIC / Accrued)</option>
+                            </select>
+                        </div>
+
+                        <!-- Mini Checklist Outputs -->
+                        <div id="miniChecklistOutput" class="mt-4 space-y-2 max-h-48 overflow-y-auto">
+                            <!-- Populated in JS -->
+                        </div>
+                    </div>
+
+                    <button onclick="switchTab('forms')" class="w-full mt-4 bg-sky-600 text-white hover:bg-sky-700 text-xs font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 shadow-sm transition-all">
+                        <i class="fa-solid fa-file-invoice"></i> Go to Full Checklists & Forms
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Access Advisor Tools Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Quick Card 1 -->
+                <div onclick="switchTab('stepper')" class="bg-white border border-slate-200 hover:border-sky-300 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all cursor-pointer group flex items-start gap-4">
+                    <div class="bg-sky-50 text-sky-600 p-3.5 rounded-xl group-hover:bg-sky-600 group-hover:text-white transition-all">
+                        <i class="fa-solid fa-route text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 group-hover:text-sky-700 text-sm">8-Step Claim Stepper</h4>
+                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">Map every phase from submission to complete approval. Identify typical processing times and required actions.</p>
+                    </div>
+                </div>
+
+                <!-- Quick Card 2 -->
+                <div onclick="switchTab('vamath')" class="bg-white border border-slate-200 hover:border-amber-400 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all cursor-pointer group flex items-start gap-4">
+                    <div class="bg-amber-50 text-amber-700 p-3.5 rounded-xl group-hover:bg-[#184FA2] group-hover:text-white transition-all">
+                        <i class="fa-solid fa-calculator text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 group-hover:text-amber-700 text-sm">VA Math Calculator</h4>
+                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">Instantly combine multiple ratings. Explains the "VA Math" sequence, residual efficiency, and computes 2026 COLA rates.</p>
+                    </div>
+                </div>
+
+                <!-- Quick Card 3 -->
+                <div onclick="switchTab('ai-advisor')" class="bg-white border border-slate-200 hover:border-[#184FA2] rounded-2xl p-5 shadow-sm hover:shadow-md transition-all cursor-pointer group flex items-start gap-4">
+                    <div class="bg-blue-50 text-[#184FA2] p-3.5 rounded-xl group-hover:bg-[#184FA2] group-hover:text-white transition-all">
+                        <i class="fa-solid fa-compass text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 group-hover:text-[#184FA2] text-sm">Patriots Compass Bot</h4>
+                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">Interact with Patriots Compass, our WaitWell integrated virtual assistant. Answering all TVC department and claims questions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. INTERACTIVE CHAPTERS TAB -->
+        <div id="section-chapters" class="tab-section hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Manual Chapter Sidebar -->
+                <div class="space-y-2 bg-white border border-slate-200 p-4 rounded-2xl shadow-sm self-start lg:col-span-1">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest pl-2 block mb-3">Claims Manual Chapters</span>
+                    <button onclick="viewChapter(1)" id="chapter-btn-1" class="chapter-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold flex items-center justify-between border border-transparent transition-all bg-sky-50 text-sky-800 border-sky-200">
+                        <span>Chapter 1: Agency Overview</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                    <button onclick="viewChapter(2)" id="chapter-btn-2" class="chapter-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold flex items-center justify-between border border-transparent transition-all text-slate-600 hover:bg-slate-50">
+                        <span>Chapter 2: Advisor Core Roles</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                    <button onclick="viewChapter(3)" id="chapter-btn-3" class="chapter-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold flex items-center justify-between border border-transparent transition-all text-slate-600 hover:bg-slate-50">
+                        <span>Chapter 3: Service-Connected Claims</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                    <button onclick="viewChapter(4)" id="chapter-btn-4" class="chapter-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold flex items-center justify-between border border-transparent transition-all text-slate-600 hover:bg-slate-50">
+                        <span>Chapter 4: Interactive Evidence</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                    <button onclick="viewChapter(5)" id="chapter-btn-5" class="chapter-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold flex items-center justify-between border border-transparent transition-all text-slate-600 hover:bg-slate-50">
+                        <span>Chapter 5: Special Exposure Guidance</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                    <button onclick="viewChapter(6)" id="chapter-btn-6" class="chapter-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold flex items-center justify-between border border-transparent transition-all text-slate-600 hover:bg-slate-50">
+                        <span>Chapter 6: Modern Appeals System</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                </div>
+
+                <!-- Chapter Content Reader -->
+                <div class="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm min-h-[500px]">
+                    <div id="chapter-reader-body">
+                        <!-- Content loaded dynamically via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. STEPPER TAB -->
+        <div id="section-stepper" class="tab-section hidden space-y-6">
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                <div class="text-center max-w-2xl mx-auto mb-8">
+                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">The 8-Step VA Claims Pathway</h2>
+                    <p class="text-sm text-slate-500 mt-2">Track the standard journey of a claim processed under the advice of the Texas Veterans Commission. Click on any step below to explore required materials, processing bottlenecks, and expert recommendations.</p>
+                </div>
+
+                <!-- Interactive Progress Stepper Bar -->
+                <div class="relative flex flex-wrap lg:flex-nowrap justify-between gap-2 max-w-5xl mx-auto mb-10 pb-4 border-b border-slate-100">
+                    <!-- Progress Line background -->
+                    <div class="absolute h-1 bg-slate-200 left-10 right-10 top-5 hidden lg:block -z-10"></div>
+                    <div id="stepper-progress-line" class="absolute h-1 bg-sky-600 left-10 top-5 hidden lg:block -z-10 transition-all duration-300" style="width: 0%;"></div>
+
+                    <!-- Steps -->
+                    <button onclick="goToStep(1)" id="step-btn-1" class="step-btn flex flex-col items-center flex-1 min-w-[90px] focus:outline-none">
+                        <div class="step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-sky-600 text-white border-2 border-white shadow-md transition-all">1</div>
+                        <span class="step-label text-[11px] font-bold text-sky-700 mt-2 text-center">Claim Received</span>
+                    </button>
+                    <button onclick="goToStep(2)" id="step-btn-2" class="step-btn flex flex-col items-center flex-1 min-w-[90px] focus:outline-none">
+                        <div class="step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-slate-100 text-slate-500 border-2 border-white shadow transition-all">2</div>
+                        <span class="step-label text-[11px] font-medium text-slate-500 mt-2 text-center">Under Review</span>
+                    </button>
+                    <button onclick="goToStep(3)" id="step-btn-3" class="step-btn flex flex-col items-center flex-1 min-w-[90px] focus:outline-none">
+                        <div class="step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-slate-100 text-slate-500 border-2 border-white shadow transition-all">3</div>
+                        <span class="step-label text-[11px] font-medium text-slate-500 mt-2 text-center">Gather Evidence</span>
+                    </button>
+                    <button onclick="goToStep(4)" id="step-btn-4" class="step-btn flex flex-col items-center flex-1 min-w-[90px] focus:outline-none">
+                        <div class="step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-slate-100 text-slate-500 border-2 border-white shadow transition-all">4</div>
+                        <span class="step-label text-[11px] font-medium text-slate-500 mt-2 text-center">Review Evidence</span>
+                    </button>
+                    <button onclick="goToStep(5)" id="step-btn-5" class="step-btn flex flex-col items-center flex-1 min-w-[90px] focus:outline-none">
+                        <div class="step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-slate-100 text-slate-500 border-2 border-white shadow transition-all">5</div>
+                        <span class="step-label text-[11px] font-medium text-slate-500 mt-2 text-center">Decision Prep</span>
+                    </button>
+                    <button onclick="goToStep(6)" id="step-btn-6" class="step-btn flex flex-col items-center flex-1 min-w-[90px] focus:outline-none">
+                        <div class="step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-slate-100 text-slate-500 border-2 border-white shadow transition-all">6</div>
+                        <span class="step-label text-[11px] font-medium text-slate-500 mt-2 text-center">Approval</span>
+                    </button>
+                    <button onclick="goToStep(7)" id="step-btn-7" class="step-btn flex flex-col items-center flex-1 min-w-[90px] focus:outline-none">
+                        <div class="step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-slate-100 text-slate-500 border-2 border-white shadow transition-all">7</div>
+                        <span class="step-label text-[11px] font-medium text-slate-500 mt-2 text-center">Notification Prep</span>
+                    </button>
+                    <button onclick="goToStep(8)" id="step-btn-8" class="step-btn flex flex-col items-center flex-1 min-w-[90px] focus:outline-none">
+                        <div class="step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-slate-100 text-slate-500 border-2 border-white shadow transition-all">8</div>
+                        <span class="step-label text-[11px] font-medium text-slate-500 mt-2 text-center">Claim Complete</span>
+                    </button>
+                </div>
+
+                <!-- Dynamic Stepper Details Display Card -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                    <div id="step-details-container">
+                        <!-- Inserted dynamically via JS based on selected step -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. VA MATH CALCULATOR TAB -->
+        <div id="section-vamath" class="tab-section hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Left Hand Controller: Add Ratings -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+                    <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle text-sky-600"></i> Add Disability Ratings
+                    </h3>
+                    <p class="text-xs text-slate-500">Input service-connected disability rating percentages to calculate the combined VA Rating. VA math is cumulative and operates on residual capacity.</p>
+                    
+                    <div>
+                        <label class="text-xs font-bold text-slate-600 uppercase tracking-wider block">Rating Percentage</label>
+                        <div class="flex gap-2 mt-1.5">
+                            <select id="ratingInputSelect" class="flex-grow p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <option value="10">10% Rating</option>
+                                <option value="20">20% Rating</option>
+                                <option value="30" selected>30% Rating</option>
+                                <option value="40">40% Rating</option>
+                                <option value="50">50% Rating</option>
+                                <option value="60">60% Rating</option>
+                                <option value="70">70% Rating</option>
+                                <option value="80">80% Rating</option>
+                                <option value="90">90% Rating</option>
+                                <option value="100">100% Rating</option>
+                            </select>
+                            <button onclick="addDisabilityRating()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1 shadow-sm whitespace-nowrap">
+                                <i class="fa-solid fa-plus"></i> Add Rating
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic List of Active Ratings -->
+                    <div class="pt-4 border-t border-slate-100">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Active Disability List</span>
+                            <button onclick="clearAllDisabilities()" class="text-[11px] font-semibold text-rose-600 hover:text-rose-800">Clear All</button>
+                        </div>
+                        <div id="disabilityListContainer" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                            <!-- Populated dynamically via JS -->
+                            <p class="text-xs text-slate-400 italic py-2 text-center">No disability ratings added yet. Add one above.</p>
+                        </div>
+                    </div>
+
+                    <!-- Dependency Information Setup -->
+                    <div class="pt-4 border-t border-slate-100 space-y-3">
+                        <span class="text-xs font-bold text-slate-600 uppercase tracking-wider block">Est. 2026 Compensation Parameters</span>
+                        <div>
+                            <label class="text-[11px] text-slate-500 block">Dependents Status</label>
+                            <select id="dependentStatus" onchange="calculateVAMath()" class="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <option value="single">Single (No Dependents)</option>
+                                <option value="spouse">Veteran with Spouse</option>
+                                <option value="spouse_parents">Veteran with Spouse & Parents</option>
+                                <option value="spouse_child">Veteran with Spouse & 1 Child</option>
+                                <option value="child_only">Veteran with 1 Child (No Spouse)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Hand Displays: Calculation & Math Logger -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Score card -->
+                    <div class="bg-gradient-to-br from-[#0A2540] to-slate-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="text-center md:text-left">
+                            <span class="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded tracking-widest inline-block mb-2">VA COMBINED STATUS</span>
+                            <h3 class="text-sm font-semibold text-slate-300">Your Combined Rounded Rating is:</h3>
+                            <div class="flex items-baseline justify-center md:justify-start gap-2 mt-1">
+                                <span id="combinedRoundedDisplay" class="text-5xl font-black text-white">0%</span>
+                                <span id="unroundedDisplay" class="text-xs text-slate-400 font-semibold">(Raw: 0.0%)</span>
+                            </div>
+                        </div>
+                        <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-xl text-center min-w-[200px]">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Estimated 2026 Monthly Pay</span>
+                            <span id="estimatedPayDisplay" class="text-3xl font-extrabold text-amber-400 mt-1 block">$0.00</span>
+                            <span class="text-[9px] text-slate-500 mt-1 block">VA Disability Pay is Non-Taxable</span>
+                        </div>
+                    </div>
+
+                    <!-- Step-by-Step Explanation Log -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <h4 class="font-bold text-slate-900 text-sm mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-list-ol text-sky-600"></i> Mathematical Breakdown Log
+                        </h4>
+                        <div id="mathLogOutput" class="space-y-3 max-h-72 overflow-y-auto pr-2 text-xs text-slate-600">
+                            <p class="italic text-slate-400">Step-by-step calculations will appear here after adding multiple disability ratings.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. FORMS & REFERENCES TAB -->
+        <div id="section-forms" class="tab-section hidden space-y-6">
+            <!-- Documentation Checklist Cards -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                <h2 class="text-xl font-extrabold text-slate-900 tracking-tight mb-2">Claim Document Verification Guide</h2>
+                <p class="text-xs text-slate-500 mb-6">Select your primary objective below to load details of the mandatory documents and official VA forms required by accredited claims officers to establish benefits under 38 CFR.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Compensation Checklist Card -->
+                    <div class="bg-slate-50 hover:bg-white border border-slate-200 hover:border-sky-300 rounded-xl p-5 shadow-sm transition-all">
+                        <h4 class="font-bold text-slate-900 text-sm border-b border-slate-200 pb-2 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-person-military-pointing text-sky-600"></i> Disability Compensation
+                        </h4>
+                        <ul class="space-y-2 text-xs text-slate-600">
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-sky-600 focus:ring-sky-500">
+                                <span><strong>Intent to File (VA Form 21-0966)</strong> - Establishes retroactive claim date.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-sky-600 focus:ring-sky-500">
+                                <span><strong>VA Form 21-22</strong> - Appoints TVC as your Accredited Power of Attorney.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-sky-600 focus:ring-sky-500">
+                                <span><strong>DD-214 Certificate</strong> - Must show discharge character (Honorable, Under Honorable, etc.).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-sky-600 focus:ring-sky-500">
+                                <span><strong>Service Medical Records (STRs)</strong> - Showing in-service event or diagnosis.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-sky-600 focus:ring-sky-500">
+                                <span><strong>VA Form 21-526EZ</strong> - The actual application for Compensation.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Pension Checklist Card -->
+                    <div class="bg-slate-50 hover:bg-white border border-slate-200 hover:border-amber-300 rounded-xl p-5 shadow-sm transition-all">
+                        <h4 class="font-bold text-slate-900 text-sm border-b border-slate-200 pb-2 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-house-chimney-medical text-amber-600"></i> Low-Income Pension
+                        </h4>
+                        <ul class="space-y-2 text-xs text-slate-600">
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-amber-600 focus:ring-amber-500">
+                                <span><strong>Intent to File (VA Form 21-0966)</strong> - Preserves retroactive pension date.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-amber-600 focus:ring-amber-500">
+                                <span><strong>VA Form 21P-527EZ</strong> - Direct application for veterans disability pension.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-amber-600 focus:ring-amber-500">
+                                <span><strong>Wartime Service Validation</strong> - Shows 90+ days active duty with 1 day in recognized war.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-amber-600 focus:ring-amber-500">
+                                <span><strong>Net Worth & Income Records</strong> - Under standard limits for financial need.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-amber-600 focus:ring-amber-500">
+                                <span><strong>Permanently Disabled Diagnosis</strong> - If under age 65, medical verification required.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Survivor Benefits Card -->
+                    <div class="bg-slate-50 hover:bg-white border border-slate-200 hover:border-purple-300 rounded-xl p-5 shadow-sm transition-all">
+                        <h4 class="font-bold text-slate-900 text-sm border-b border-slate-200 pb-2 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-hands-holding-child text-purple-600"></i> Survivor & Dependents
+                        </h4>
+                        <ul class="space-y-2 text-xs text-slate-600">
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-purple-600 focus:ring-purple-500">
+                                <span><strong>VA Form 21P-534EZ</strong> - Application for DIC, Death Pension, and Accrued Benefits.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-purple-600 focus:ring-purple-500">
+                                <span><strong>Veteran's Death Certificate</strong> - Certifying cause of death or service rating status.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-purple-600 focus:ring-purple-500">
+                                <span><strong>Marriage Certificate / Birth Cert</strong> - Validating dependent child or spouse status.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <input type="checkbox" class="mt-0.5 rounded accent-purple-600 focus:ring-purple-500">
+                                <span><strong>VA Form 21-686c</strong> - Declaration of Status of Dependents.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CFR Title 38 Index Table -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- VA Forms Reference -->
+                <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="font-bold text-slate-900 text-base mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-folder-open text-sky-600"></i> Key VA Forms Index
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-200 text-slate-400 font-bold uppercase text-[10px] tracking-wider">
+                                    <th class="py-3 px-2">Form #</th>
+                                    <th class="py-3 px-2">Official Title</th>
+                                    <th class="py-3 px-2">Purpose & Importance</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-slate-700">
+                                <tr>
+                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21-0966</td>
+                                    <td class="py-3 px-2 font-semibold">Intent to File</td>
+                                    <td class="py-3 px-2 text-slate-500">Saves retroactive effective date for up to 364 days before formal submission.</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21-526EZ</td>
+                                    <td class="py-3 px-2 font-semibold">Application for Disability Compensation</td>
+                                    <td class="py-3 px-2 text-slate-500">Primary form used for original, new, secondary, or increased claims.</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21-22</td>
+                                    <td class="py-3 px-2 font-semibold">Appointment of VSO</td>
+                                    <td class="py-3 px-2 text-slate-500">Formally designates TVC as your legal representative before the VA.</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21P-527EZ</td>
+                                    <td class="py-3 px-2 font-semibold">Application for Pension</td>
+                                    <td class="py-3 px-2 text-slate-500">Claim form for war-time veterans meeting specific physical and income thresholds.</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 20-0995</td>
+                                    <td class="py-3 px-2 font-semibold">Supplemental Claim Application</td>
+                                    <td class="py-3 px-2 text-slate-500">Filing for review under AMA when new and relevant evidence is discovered.</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 20-0996</td>
+                                    <td class="py-3 px-2 font-semibold">Higher-Level Review (HLR)</td>
+                                    <td class="py-3 px-2 text-slate-500">Request for a senior rater review of existing evidence with zero new documents allowed.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CFR Index -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="font-bold text-slate-900 text-base mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-scale-balanced text-amber-600"></i> Title 38 CFR Index
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                            <h4 class="text-xs font-bold text-slate-800 flex items-center justify-between">
+                                <span>38 CFR Part 3 (Adjudication)</span>
+                                <span class="bg-amber-100 text-amber-800 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase">Critical</span>
+                            </h4>
+                            <p class="text-[11px] text-slate-500 mt-1">Defines rules for compensation, pension, death benefits, and general criteria of service connection.</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                            <h4 class="text-xs font-bold text-slate-800">38 CFR Part 4 (Schedule for Ratings)</h4>
+                            <p class="text-[11px] text-slate-500 mt-1">Houses the actual tables and rating diagnostic codes used to evaluate specific diseases and injuries.</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                            <h4 class="text-xs font-bold text-slate-800">38 CFR Part 20 (Board Appeals)</h4>
+                            <p class="text-[11px] text-slate-500 mt-1">Establishes guidelines and procedures for appeals submitted to the Board of Veterans' Appeals (BVA).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. SMART AI CLAIMS ADVISOR TAB -->
+        <div id="section-ai-advisor" class="tab-section hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Integration Info Card -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#184FA2] to-[#B71F27] flex items-center justify-center shadow-md text-white mb-4">
+                            <i class="fa-solid fa-compass text-2xl"></i>
+                        </div>
+                        <span class="px-2.5 py-0.5 text-[10px] font-bold bg-[#184FA2]/10 text-[#184FA2] rounded-full uppercase tracking-wider">WaitWell Integration</span>
+                        <h3 class="text-lg font-extrabold text-slate-900 mt-2">Patriots Compass Bot</h3>
+                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                            The Patriots Compass chatbot is officially integrated with the Texas Veterans Commission Claims Advisory Portal. Designed to provide instant support, Patriots Compass is fully customized with authorized TVC procedures and Title 38 CFR guidelines.
+                        </p>
+                        
+                        <div class="mt-6 space-y-3">
+                            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Key Capabilities</h4>
+                            <div class="flex gap-2 items-start">
+                                <i class="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
+                                <span class="text-xs text-slate-600">Answers TVC Claims Manual specific FAQs</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <i class="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
+                                <span class="text-xs text-slate-600">Cross-references Title 38 CFR Parts 3 & 4</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <i class="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
+                                <span class="text-xs text-slate-600">Assists with VA Forms catalog directions</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-slate-100 mt-6">
+                        <div class="bg-emerald-50 text-emerald-800 border border-emerald-200 p-3 rounded-xl flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+                            <span class="text-xs font-bold">Patriot Compass Live Widget Connected</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested Inquiries / Prompts Guide -->
+                <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+                    <h3 class="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb text-amber-500"></i> Recommended Inquiries for Patriots Compass
+                    </h3>
+                    <p class="text-xs text-slate-500">Copy any of these preset inquiries to paste directly into the Patriots Compass chat widget floating on your screen.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div class="p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all relative group">
+                            <h4 class="font-bold text-xs text-[#184FA2]">PACT Act toxic exposure rules</h4>
+                            <p class="text-[11px] text-slate-500 mt-1">Ask: "Explain the PACT Act presumptive criteria for Gulf War and Burn Pit exposures."</p>
+                            <button onclick="copyToClipboard('Explain the PACT Act presumptive criteria for Gulf War and Burn Pit exposures.')" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 text-xs">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all relative group">
+                            <h4 class="font-bold text-xs text-[#184FA2]">VA Combined Ratings (Math)</h4>
+                            <p class="text-[11px] text-slate-500 mt-1">Ask: "Give me an example of how 50% and 30% ratings combine under VA Math."</p>
+                            <button onclick="copyToClipboard('Give me an example of how 50% and 30% ratings combine under VA Math.')" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 text-xs">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all relative group">
+                            <h4 class="font-bold text-xs text-[#184FA2]">Intent to File Deadlines</h4>
+                            <p class="text-[11px] text-slate-500 mt-1">Ask: "What is VA Form 21-0966 and how long is it active to preserve retroactive dates?"</p>
+                            <button onclick="copyToClipboard('What is VA Form 21-0966 and how long is it active to preserve retroactive dates?')" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 text-xs">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all relative group">
+                            <h4 class="font-bold text-xs text-[#184FA2]">Appeals & Review Lanes</h4>
+                            <p class="text-[11px] text-slate-500 mt-1">Ask: "What is the difference between Higher-Level Review (Form 20-0996) and a Supplemental Claim?"</p>
+                            <button onclick="copyToClipboard('What is the difference between Higher-Level Review (Form 20-0996) and a Supplemental Claim?')" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 text-xs">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-blue-50 border-l-4 border-[#184FA2] rounded-r-xl mt-6">
+                        <span class="text-xs font-bold text-[#184FA2] block">Advisory Note</span>
+                        <p class="text-[11px] text-slate-700 leading-relaxed mt-1">
+                            Patriots Compass virtual assistant processes questions using WaitWell API integrations. Ensure you do not submit personally identifiable information (PII) like full SSNs or complete health records during chat sessions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white border-t border-slate-800 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+            <div>
+                <p class="text-xs text-slate-400">&copy; 2026 Texas Veterans Commission. Authorized reference guide based on statutory laws.</p>
+                <p class="text-[10px] text-slate-500 mt-1">This tool is designed to support Accredited Claims Benefit Advisors and Veterans. Content is derived from Title 38 CFR and VBA Adjudication Manual M21-1.</p>
+            </div>
+            <div class="flex gap-4 text-xs text-slate-400">
+                <a href="https://tvc.texas.gov/" target="_blank" class="hover:text-amber-400 transition-colors">TVC Website</a>
+                <span>•</span>
+                <a href="https://www.ecfr.gov/current/title-38" target="_blank" class="hover:text-amber-400 transition-colors">Electronic CFR</a>
+                <span>•</span>
+                <span class="text-amber-400 font-bold">Texas Strong ★</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Execution Logic -->
+    <script>
+        // Global Manual Data Source
+        const manualChapters = {
+            1: {
+                title: "Chapter 1: Agency Overview & Mission",
+                subtitle: "Sunset Act, Commissioners, and Legislative Foundations",
+                icon: "fa-solid fa-building-flag text-sky-600",
+                content: `
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        The <strong>Texas Veterans Commission (TVC)</strong> is established under the Texas Government Code Chapter 434. The agency is subject to Chapter 325 (the Texas Sunset Act) and is continued periodically to support over 1.7 million veterans in Texas.
+                    </p>
+                    <h4 class="font-bold text-slate-800 text-xs mb-2 uppercase tracking-wide">Mission & Philosophy</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        The mission of the TVC is to advocate for and serve Texas veterans, their families, and survivors. By offering state-level resources and professional accreditation to service representatives, the state guarantees high-caliber representation before the Federal Department of Veterans Affairs (VA).
+                    </p>
+                    <h4 class="font-bold text-slate-800 text-xs mb-2 uppercase tracking-wide">Veterans Mental Health Department</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Operating alongside claims, this department facilitates critical resource routing, suicide prevention initiatives, and local peer support programs designed to address severe service-connected mental health conditions prior to final VA rating actions.
+                    </p>
+                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl mt-4">
+                        <span class="text-xs font-bold text-amber-800 flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Advisor Protocol
+                        </span>
+                        <p class="text-[11px] text-amber-900 mt-1 leading-relaxed">
+                            Always coordinate with regional health advocates when working with claimants displaying signs of PTSD, anxiety, or high stress during the claims preparation phase.
+                        </p>
+                    </div>
+                `
+            },
+            2: {
+                title: "Chapter 2: Advisor Core Roles & Power of Attorney",
+                subtitle: "Accreditation, Representation, and VA Form 21-22",
+                icon: "fa-solid fa-briefcase text-sky-600",
+                content: `
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        <strong>Claims Benefit Advisors (CBAs)</strong> are highly experienced, accredited state employees designated to assist claimants in the navigation of federal benefits. They operate under a strict code of ethics and state mandate.
+                    </p>
+                    <h4 class="font-bold text-slate-800 text-xs mb-2 uppercase tracking-wide">Establishing Representation (POA)</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Before a CBA can access a veteran's records, review federal databases, or submit formal paperwork, they must establish formal Power of Attorney (POA) using <strong>VA Form 21-22</strong> (Appointment of Veterans Service Organization as Claimant's Representative). This legal designation ensures confidentiality and allows complete advocate access.
+                    </p>
+                    <h4 class="font-bold text-slate-800 text-xs mb-2 uppercase tracking-wide">Collocation & Partnerships</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Under active Memorandums of Understanding (MOU), TVC CBAs are collocated within regional VA offices (Houston, Waco), clinics, and military bases. Furthermore, TVC acts in collaboration with major Veterans Service Organizations (VSOs) like the American Legion and the Veterans of Foreign Wars (VFW) to offer rapid regional claims routing.
+                    </p>
+                `
+            },
+            3: {
+                title: "Chapter 3: Service-Connected Claims",
+                subtitle: "Original, Increased, New, and Secondary Filings",
+                icon: "fa-solid fa-paste text-sky-600",
+                content: `
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Claims are legally classified according to their occurrence in a veteran's benefits lifecycle. Understanding these types ensures correct form execution.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="text-xs font-bold text-slate-800 block">Original Claim</span>
+                            <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">The very first claim filed for disability compensation by a veteran after discharge.</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="text-xs font-bold text-slate-800 block">Increased Claim</span>
+                            <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">Filing to evaluate an already rated service-connected condition which has actively deteriorated.</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="text-xs font-bold text-slate-800 block">New Claim</span>
+                            <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">Filing for a disability never previously rated, independent of existing awards.</p>
+                        </div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                            <span class="text-xs font-bold text-slate-800 block">Secondary Claim</span>
+                            <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">Claim for an illness or condition directly caused or aggravated by a rated service-connected disability.</p>
+                        </div>
+                    </div>
+                    <h4 class="font-bold text-slate-800 text-xs mb-2 uppercase tracking-wide">Temporary 100% Ratings</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Under specific guidelines of 38 CFR, veterans can be awarded a temporary 100% disability status following major surgery or hospitalization exceeding 21 days for an established service-connected disability, or during active recovery from catastrophic service illnesses.
+                    </p>
+                `
+            },
+            4: {
+                title: "Chapter 4: Evidence Requirements & Gathering",
+                subtitle: "Service Medical Records and Fully Developed Claims (FDCs)",
+                icon: "fa-solid fa-file-medical text-sky-600",
+                content: `
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        To successfully secure service-connection under 38 CFR Part 3, three evidentiary elements must be verified: <strong>(1) In-service event or injury, (2) Current diagnosed disability, and (3) Medical nexus linking the diagnosis to the event.</strong>
+                    </p>
+                    <h4 class="font-bold text-slate-800 text-xs mb-2 uppercase tracking-wide">Fully Developed Claims (FDCs) vs. Standard Claims</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        An <strong>FDC</strong> is an optimized process where the claimant submits 100% of all relevant private records, Service Treatment Records (STRs), and nexus opinions concurrently with the initial VA Form 21-526EZ. The claimant certifies that no further evidence is needed, bypassing extensive VA gathering delays.
+                    </p>
+                    <h4 class="font-bold text-slate-800 text-xs mb-2 uppercase tracking-wide">The Role of the Intent to File (Form 21-0966)</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        The Intent to File (ITF) preserves the effective date of a claim for up to <strong>364 days</strong>. Filing an ITF establishes a placeholder. Once established, the CBA has exactly one year to assemble medical files, secure doctor opinions, and submit the formal claim, ensuring retroactivity.
+                    </p>
+                `
+            },
+            5: {
+                title: "Chapter 5: Special Exposure Guidance",
+                subtitle: "PACT Act, Agent Orange, Gulf War Illness, and Burn Pits",
+                icon: "fa-solid fa-shield-virus text-sky-600",
+                content: `
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Veterans exposed to hazardous compounds, chemical weapons, or environmental toxins during service are subject to special presumptive service-connection laws.
+                    </p>
+                    <h4 class="font-bold text-slate-800 text-xs mb-2 uppercase tracking-wide">The PACT Act & Gulf War Presumptions</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Signed into law to address burn pits, airborne hazards, and radioactive substances. Under the PACT Act, dozens of conditions (including multiple cancers, chronic bronchitis, rhinitis, and asthma) are considered "presumptive." If a veteran served in recognized regions during designated eras, the VA presumes service connection without requiring a specific medical nexus.
+                    </p>
+                    <h4 class="font-bold text-slate-800 text-xs mb-2 uppercase tracking-wide">Herbicide (Agent Orange) Exposures</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Applicable to Vietnam War veterans, including Blue Water Navy, Korean Demilitarized Zone, and select Thailand military bases. Primary presumptive illnesses include Parkinson's disease, type II diabetes, ischemic heart disease, and prostate cancer.
+                    </p>
+                `
+            },
+            6: {
+                title: "Chapter 6: Modern Appeals System (AMA)",
+                subtitle: "Higher-Level Reviews, Supplemental Claims, and Board Appeals",
+                icon: "fa-solid fa-gavel text-sky-600",
+                content: `
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Following the implementation of the Appeals Modernization Act (AMA), veterans who receive adverse rating decisions have exactly one year from notification to appeal through one of three streamlined lanes:
+                    </p>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+                            <span class="bg-sky-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">1</span>
+                            <div>
+                                <strong class="text-xs text-slate-950 block">Higher-Level Review (HLR - Form 20-0996)</strong>
+                                <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">A senior, experienced claims adjudicator reviews the exact same evidentiary file. <strong>No new evidence is permitted.</strong> Best for identifying clear errors of law or misinterpretation of regulations.</p>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+                            <span class="bg-sky-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">2</span>
+                            <div>
+                                <strong class="text-xs text-slate-950 block">Supplemental Claim (Form 20-0995)</strong>
+                                <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">Allows submission of <strong>new and relevant evidence</strong>. Used when a claim is denied due to lack of diagnostic evidence, treatment records, or nexus opinions which are subsequently obtained.</p>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex gap-3">
+                            <span class="bg-sky-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">3</span>
+                            <div>
+                                <strong class="text-xs text-slate-950 block">Appeal to the Board (BVA - Form 10182)</strong>
+                                <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">Direct escalation to a Veterans Law Judge at the Board of Veterans' Appeals in Washington, D.C. Options include Direct Review (existing record), Evidence Submission (90-day window for new files), or a formal Hearing with a judge.</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // Stepper Navigation Data Source
+        const stepsData = {
+            1: {
+                title: "Step 1: Claim Received & Date Preserved",
+                icon: "fa-solid fa-file-import text-[#184FA2]",
+                duration: "1 - 14 Days",
+                impact: "High (Sets Retroactivity)",
+                description: "The veteran's claim package or an electronic application via VA.gov is officially logged into the VA system. If a previous 'Intent to File' (VA Form 21-0966) was active, the effective pay date defaults back to the ITF filing date.",
+                advice: "Always establish the Intent to File immediately before spending weeks gathering medical records. Every month delayed is a month of retro-compensation forfeited."
+            },
+            2: {
+                title: "Step 2: Under Review",
+                icon: "fa-solid fa-glasses text-[#184FA2]",
+                duration: "7 - 30 Days",
+                impact: "Medium",
+                description: "An administrative Veterans Service Representative (VSR) reviews the application files to verify standard jurisdictional criteria, such as character of discharge (DD-214 verification), active-duty dates, and necessary Power of Attorney.",
+                advice: "Verify that Section 4 on VA Form 21-526EZ contains complete current contact info. If an address is incorrect, critical review letters will go missing."
+            },
+            3: {
+                title: "Step 3: Gathering of Evidence",
+                icon: "fa-solid fa-magnifying-glass-plus text-[#184FA2]",
+                duration: "30 - 120 Days",
+                impact: "Critical (Longest Phase)",
+                description: "The gathering phase requires collecting Service Treatment Records (STRs), personnel folders, and private doctor records. If needed, the VA schedules a Compensation & Pension (C&P) exam to assess the severity of current disabilities.",
+                advice: "Submit a Fully Developed Claim (FDC). By providing all medical records up front, you bypass the VA's active records gathering phase, saving months."
+            },
+            4: {
+                title: "Step 4: Review of Evidence",
+                icon: "fa-solid fa-file-shield text-[#184FA2]",
+                duration: "14 - 45 Days",
+                impact: "High",
+                description: "The VSR reviews all acquired military medical logs, private diagnostic evaluations, and C&P examiner remarks. If any files are missing or incomplete, the claim is returned to Step 3 for further development.",
+                advice: "Monitor your VA.gov claims portal. If the VA requests additional evidence, submit the 'No More Evidence' declaration immediately to expedite processing."
+            },
+            5: {
+                title: "Step 5: Preparation for Decision",
+                icon: "fa-solid fa-file-signature text-[#184FA2]",
+                duration: "7 - 30 Days",
+                impact: "Critical",
+                description: "A Rating Veterans Service Representative (RVSR) evaluates the complete medical file and writes a formal decision. They assign specific diagnostic rating percentages (38 CFR Part 4) and establish service connection status.",
+                advice: "C&P exam reports are highly influential in this step. Ensure the examiner accurately documented your range of motion and worst symptoms during active exams."
+            },
+            6: {
+                title: "Step 6: Pending Decision Approval",
+                icon: "fa-solid fa-stamp text-[#184FA2]",
+                duration: "3 - 10 Days",
+                impact: "Low",
+                description: "The drafted rating decision is submitted to a senior administrative rater for quality assurance review, mathematical validation, and final authorization sign-off.",
+                advice: "This phase is highly automated. Very few claims are returned to earlier stages unless a significant regulatory error or math error is identified."
+            },
+            7: {
+                title: "Step 7: Preparation for Notification",
+                icon: "fa-solid fa-envelope-open-text text-[#184FA2]",
+                duration: "5 - 15 Days",
+                impact: "High",
+                description: "The regional VA office drafts the formal decision notification letter. This packet details the approved rating percentages, effective date of pay, monthly compensation amount, and precise legal rationale for any denials.",
+                advice: "You can frequently view your updated rating on the VA.gov portal or generate a Benefit Verification Letter before the physical mail packet arrives."
+            },
+            8: {
+                title: "Step 8: Complete & Compensation Awarded",
+                icon: "fa-solid fa-circle-check text-emerald-600",
+                duration: "1 - 5 Days",
+                impact: "Finalization",
+                description: "The decision letter is mailed, and financial routing triggers. Retroactive payments are generally deposited within several business days. Veterans have exactly 365 days from the notification date to appeal any unfavorable decisions.",
+                advice: "Review the notification package carefully with your TVC Advisor. If any condition was denied or underrated, initiate a Higher-Level Review or Supplemental Claim immediately."
+            }
+        };
+
+        // Active State variables
+        let activeDisabilities = [
+            { id: 1, percentage: 50, label: "Disability 1" },
+            { id: 2, percentage: 30, label: "Disability 2" }
+        ];
+
+        // App Initializer
+        window.onload = function() {
+            // Setup chapter viewing default
+            viewChapter(1);
+            // Setup stepper default
+            goToStep(1);
+            // Pre-calculate VA Math
+            calculateVAMath();
+            // Generate Mini-Checklist
+            generateDynamicChecklist();
+        };
+
+        // Custom Styled Modal Alerts
+        function showCustomModal(title, message, type = "info") {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = message;
+            
+            const iconContainer = document.getElementById('modalIconContainer');
+            if (type === "success") {
+                iconContainer.className = "w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0 bg-emerald-100 text-emerald-700";
+                iconContainer.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+            } else if (type === "error") {
+                iconContainer.className = "w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0 bg-rose-100 text-rose-700";
+                iconContainer.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>`;
+            } else {
+                iconContainer.className = "w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0 bg-sky-100 text-sky-700";
+                iconContainer.innerHTML = `<i class="fa-solid fa-circle-info"></i>`;
+            }
+
+            const modal = document.getElementById('customModalOverlay');
+            modal.classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('customModalOverlay').classList.add('hidden');
+        }
+
+        // Tab Navigation
+        function switchTab(tabId) {
+            // Hide all sections
+            document.querySelectorAll('.tab-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            // Show selected section
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+
+            // Toggle Tab Buttons active classes
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all duration-150 text-slate-600 hover:bg-slate-100";
+            });
+
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                if (tabId === 'ai-advisor') {
+                    activeBtn.className = "tab-btn px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all duration-150 bg-slate-900 text-white shadow-sm";
+                } else {
+                    activeBtn.className = "tab-btn px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all duration-150 bg-sky-50 text-sky-800";
+                }
+            }
+
+            // Collapse search result list on tab changes
+            clearManualSearch();
+        }
+
+        // Search Manual Logic (Interactive Client Side Searching of Chapters and Content)
+        function searchManual() {
+            const query = document.getElementById('manualSearch').value.toLowerCase().trim();
+            const resultsSection = document.getElementById('searchResultsSection');
+            const resultList = document.getElementById('searchResultList');
+            const countSpan = document.getElementById('searchResultCount');
+
+            if (!query) {
+                resultsSection.classList.add('hidden');
+                return;
+            }
+
+            resultsSection.classList.remove('hidden');
+            resultList.innerHTML = '';
+            let matchesCount = 0;
+
+            // Search through manual chapters
+            Object.keys(manualChapters).forEach(key => {
+                const chapter = manualChapters[key];
+                const cleanText = chapter.content.replace(/<[^>]*>/g, '').toLowerCase();
+                
+                if (chapter.title.toLowerCase().includes(query) || chapter.subtitle.toLowerCase().includes(query) || cleanText.includes(query)) {
+                    matchesCount++;
+                    
+                    // Create search card
+                    const card = document.createElement('div');
+                    card.className = "p-4 bg-slate-50 border border-slate-200 hover:border-sky-300 rounded-xl transition-all cursor-pointer";
+                    card.onclick = () => {
+                        switchTab('chapters');
+                        viewChapter(key);
+                        clearManualSearch();
+                    };
+
+                    // Snippet generation
+                    const index = cleanText.indexOf(query);
+                    const start = Math.max(0, index - 60);
+                    const end = Math.min(cleanText.length, index + query.length + 80);
+                    const snippet = cleanText.substring(start, end).replace(query, `<span class="bg-amber-300 px-1 font-bold text-slate-900 rounded">${query}</span>`);
+
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="font-bold text-xs text-sky-800">${chapter.title}</h4>
+                            <span class="text-[10px] bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-bold uppercase">Manual Chapter</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 font-semibold mb-1">${chapter.subtitle}</p>
+                        <p class="text-xs text-slate-600 italic">"...${snippet}..."</p>
+                    `;
+                    resultList.appendChild(card);
+                }
+            });
+
+            countSpan.innerText = matchesCount;
+
+            if (matchesCount === 0) {
+                resultList.innerHTML = `
+                    <div class="text-center py-8">
+                        <i class="fa-solid fa-face-frown text-slate-300 text-3xl mb-2"></i>
+                        <p class="text-xs text-slate-500">No matches found in the Claims Manual chapters. Try searching for other terms like 'PACT Act', 'VA Math', 'Appeals', or 'Form'.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function clearManualSearch() {
+            document.getElementById('manualSearch').value = '';
+            document.getElementById('searchResultsSection').classList.add('hidden');
+        }
+
+        // View Manual Chapter
+        function viewChapter(chapterNum) {
+            // Update Chapter Sidebar buttons
+            document.querySelectorAll('.chapter-btn').forEach(btn => {
+                btn.className = "chapter-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold flex items-center justify-between border border-transparent transition-all text-slate-600 hover:bg-slate-50";
+            });
+
+            const activeBtn = document.getElementById(`chapter-btn-${chapterNum}`);
+            if (activeBtn) {
+                activeBtn.className = "chapter-btn w-full text-left px-3 py-2.5 rounded-lg text-xs font-bold flex items-center justify-between border border-transparent transition-all bg-sky-50 text-sky-800 border-sky-200";
+            }
+
+            const chapterData = manualChapters[chapterNum];
+            const readerBody = document.getElementById('chapter-reader-body');
+
+            if (chapterData) {
+                readerBody.innerHTML = `
+                    <div class="flex items-center gap-3 border-b border-slate-100 pb-4 mb-4">
+                        <div class="bg-sky-50 p-3 rounded-xl">
+                            <i class="${chapterData.icon} text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-extrabold text-slate-900 tracking-tight">${chapterData.title}</h2>
+                            <p class="text-xs text-slate-400 font-semibold">${chapterData.subtitle}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4 text-xs leading-relaxed text-slate-600">
+                        ${chapterData.content}
+                    </div>
+                `;
+            }
+        }
+
+        // Interactive Stepper Handler
+        function goToStep(stepNum) {
+            // Update Active Circles in stepper
+            document.querySelectorAll('.step-btn').forEach((btn, index) => {
+                const num = index + 1;
+                const circle = btn.querySelector('.step-circle');
+                const label = btn.querySelector('.step-label');
+
+                if (num < stepNum) {
+                    circle.className = "step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-emerald-600 text-white border-2 border-white shadow";
+                    label.className = "step-label text-[11px] font-bold text-emerald-600 mt-2 text-center";
+                } else if (num === stepNum) {
+                    circle.className = "step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-[#184FA2] text-white border-2 border-white shadow-md scale-110";
+                    label.className = "step-label text-[11px] font-bold text-[#184FA2] mt-2 text-center";
+                } else {
+                    circle.className = "step-circle w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-slate-100 text-slate-500 border-2 border-white shadow";
+                    label.className = "step-label text-[11px] font-medium text-slate-500 mt-2 text-center";
+                }
+            });
+
+            // Adjust progress bar percentage
+            const progressPct = ((stepNum - 1) / 7) * 100;
+            const progLine = document.getElementById('stepper-progress-line');
+            if (progLine) {
+                progLine.style.width = `${progressPct}%`;
+            }
+
+            // Load Details inside container
+            const step = stepsData[stepNum];
+            const detailsContainer = document.getElementById('step-details-container');
+
+            if (step) {
+                detailsContainer.innerHTML = `
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-blue-50 p-3 rounded-full text-[#184FA2]">
+                                <i class="${step.icon} text-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-extrabold text-slate-900">${step.title}</h3>
+                                <p class="text-xs text-slate-400 font-semibold">Typical Phase Length: <span class="text-[#184FA2] font-bold">${step.duration}</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider self-start md:self-auto flex items-center gap-1">
+                            <i class="fa-solid fa-bolt"></i> Advisor Impact: ${step.impact}
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Operational Phase Summary</span>
+                            <p class="text-xs text-slate-600 leading-relaxed mt-1">${step.description}</p>
+                        </div>
+                        <div class="p-4 bg-blue-50 border-l-4 border-[#184FA2] rounded-r-xl">
+                            <span class="text-[10px] font-bold text-[#184FA2] uppercase tracking-widest flex items-center gap-1">
+                                <i class="fa-solid fa-star"></i> Pro-Tip from TVC Claims Manual
+                            </span>
+                            <p class="text-xs text-slate-700 mt-1 leading-relaxed italic">"${step.advice}"</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-200">
+                        <button onclick="goToStep(${Math.max(1, stepNum - 1)})" ${stepNum === 1 ? 'disabled class="opacity-40 text-xs font-bold text-slate-400 cursor-not-allowed"' : 'class="text-xs font-bold text-slate-600 hover:text-slate-800 flex items-center gap-1"'} >
+                            <i class="fa-solid fa-arrow-left"></i> Previous Step
+                        </button>
+                        <span class="text-xs font-bold text-slate-400">Step ${stepNum} of 8</span>
+                        <button onclick="goToStep(${Math.min(8, stepNum + 1)})" ${stepNum === 8 ? 'disabled class="opacity-40 text-xs font-bold text-slate-400 cursor-not-allowed"' : 'class="text-xs font-bold text-sky-600 hover:text-sky-800 flex items-center gap-1"'} >
+                            Next Step <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Checklist Generator Engine
+        function generateDynamicChecklist() {
+            const selectValue = document.getElementById('checklistTypeSelect').value;
+            const container = document.getElementById('miniChecklistOutput');
+
+            let checklistItems = [];
+            if (selectValue === 'compensation') {
+                checklistItems = [
+                    "VA Form 21-0966 (Intent to File)",
+                    "VA Form 21-22 (TVC Power of Attorney)",
+                    "DD-214 Certificate (Member 4 Copy)",
+                    "Service Medical Records (STRs)",
+                    "Private Clinic Diagnoses & Test Results",
+                    "VA Form 21-526EZ Application Packet"
+                ];
+            } else if (selectValue === 'pension') {
+                checklistItems = [
+                    "VA Form 21-0966 (Intent to File)",
+                    "VA Form 21P-527EZ Pension Application",
+                    "DD-214 validating 90+ days active duty",
+                    "Complete household income statement",
+                    "Net worth and asset records",
+                    "Social Security Administration award letters"
+                ];
+            } else {
+                checklistItems = [
+                    "VA Form 21P-534EZ Survivor Benefits App",
+                    "Veteran's Death Certificate (Cause Listed)",
+                    "Certified Marriage Certificate",
+                    "Dependent Children's birth records",
+                    "Proof of funeral expense receipts"
+                ];
+            }
+
+            container.innerHTML = '';
+            checklistItems.forEach(item => {
+                const row = document.createElement('div');
+                row.className = "flex items-center gap-2 p-1.5 bg-slate-50 border border-slate-100 rounded-lg hover:bg-slate-100 transition-colors";
+                row.innerHTML = `
+                    <input type="checkbox" class="rounded text-sky-600 accent-sky-600 focus:ring-sky-500 shrink-0">
+                    <span class="text-[11px] text-slate-700 font-medium truncate">${item}</span>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // VA Math Combined Rating Calculator Logic
+        function addDisabilityRating() {
+            const pct = parseInt(document.getElementById('ratingInputSelect').value);
+            const id = Date.now();
+            const label = `Disability Rating #${activeDisabilities.length + 1}`;
+
+            activeDisabilities.push({ id, percentage: pct, label });
+            calculateVAMath();
+        }
+
+        function removeDisabilityRating(id) {
+            activeDisabilities = activeDisabilities.filter(d => d.id !== id);
+            calculateVAMath();
+        }
+
+        // Clear active disabilities
+        function clearAllDisabilities() {
+            activeDisabilities = [];
+            calculateVAMath();
+        }
+
+        function calculateVAMath() {
+            const listContainer = document.getElementById('disabilityListContainer');
+            const mathLog = document.getElementById('mathLogOutput');
+
+            // 1. Render active list
+            listContainer.innerHTML = '';
+            if (activeDisabilities.length === 0) {
+                listContainer.innerHTML = `<p class="text-xs text-slate-400 italic py-2 text-center">No active disability ratings. Add one above.</p>`;
+                document.getElementById('combinedRoundedDisplay').innerText = "0%";
+                document.getElementById('unroundedDisplay').innerText = "(Raw: 0.0%)";
+                document.getElementById('estimatedPayDisplay').innerText = "$0.00";
+                mathLog.innerHTML = `<p class="italic text-slate-400">Step-by-step calculations will appear here after adding multiple disability ratings.</p>`;
+                return;
+            }
+
+            activeDisabilities.forEach(item => {
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all";
+                row.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-800 flex items-center justify-center text-xs font-bold">${item.percentage}%</span>
+                        <input type="text" value="${item.label}" onchange="updateLabel(${item.id}, this.value)" class="bg-transparent font-semibold text-slate-700 text-xs focus:outline-none focus:border-b focus:border-slate-300 w-32 md:w-44 py-0.5">
+                    </div>
+                    <button onclick="removeDisabilityRating(${item.id})" class="text-rose-500 hover:text-rose-700 p-1.5 hover:bg-rose-50 rounded-lg transition-all">
+                        <i class="fa-regular fa-trash-can text-sm"></i>
+                    </button>
+                `;
+                listContainer.appendChild(row);
+            });
+
+            // 2. Perform Real VA Math Combined Impairment algorithm
+            const sorted = [...activeDisabilities].sort((a, b) => b.percentage - a.percentage);
+            
+            let logs = [];
+            let healthyEfficiency = 100.00;
+            let currentCombinedRating = 0.00;
+
+            logs.push(`<div class="font-bold text-slate-800 border-b border-slate-100 pb-1 flex items-center justify-between">
+                <span>Active Calculation Log</span>
+                <span class="text-[10px] bg-sky-100 text-sky-800 px-2 py-0.5 rounded uppercase">VA Math</span>
+            </div>`);
+            logs.push(`<div class="flex justify-between text-slate-500"><span>Initial capacity:</span><strong>100% efficient</strong></div>`);
+
+            sorted.forEach((disability, index) => {
+                const pct = disability.percentage;
+                const impactAmount = healthyEfficiency * (pct / 100);
+                const prevHealthy = healthyEfficiency;
+                healthyEfficiency = healthyEfficiency - impactAmount;
+                currentCombinedRating = 100.00 - healthyEfficiency;
+
+                logs.push(`
+                    <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
+                        <div class="flex justify-between font-bold text-slate-800">
+                            <span>Applying: ${disability.percentage}% (${disability.label})</span>
+                            <span class="text-[#184FA2] font-semibold">Step ${index + 1}</span>
+                        </div>
+                        <div class="flex justify-between text-slate-500 text-[11px]">
+                            <span>Formula:</span>
+                            <span>${prevHealthy.toFixed(2)}% healthy × ${pct}% = ${impactAmount.toFixed(2)}% added impairment</span>
+                        </div>
+                        <div class="flex justify-between text-slate-500 text-[11px]">
+                            <span>Status:</span>
+                            <span>Impairment is now ${currentCombinedRating.toFixed(2)}% (Residual efficiency remaining: ${healthyEfficiency.toFixed(2)}%)</span>
+                        </div>
+                    </div>
+                `);
+            });
+
+            // Rounding up/down to nearest 10%
+            const roundedRating = Math.round(currentCombinedRating / 10) * 10;
+            logs.push(`
+                <div class="pt-2 border-t border-slate-100 flex justify-between items-center text-slate-700">
+                    <span>Cumulative Raw Disability:</span>
+                    <strong class="text-slate-900">${currentCombinedRating.toFixed(2)}%</strong>
+                </div>
+                <div class="flex justify-between items-center text-slate-900">
+                    <span>Final Rounded VA Rating:</span>
+                    <strong class="text-sky-700 text-sm bg-sky-100 px-2 py-0.5 rounded font-extrabold">${roundedRating}%</strong>
+                </div>
+            `);
+
+            mathLog.innerHTML = logs.join('');
+
+            // 3. Update Visual Displays
+            document.getElementById('combinedRoundedDisplay').innerText = `${roundedRating}%`;
+            document.getElementById('unroundedDisplay').innerText = `(Raw: ${currentCombinedRating.toFixed(1)}%)`;
+
+            // Est. 2026 Monthly Comp Rates (Simple Approximation for Demo purposes based on official 2026 COLA stats)
+            const dependencyType = document.getElementById('dependentStatus').value;
+            const rates = {
+                10: { single: 171.23, spouse: 171.23, spouse_parents: 171.23, spouse_child: 171.23, child_only: 171.23 },
+                20: { single: 338.49, spouse: 338.49, spouse_parents: 338.49, spouse_child: 338.49, child_only: 338.49 },
+                30: { single: 524.31, spouse: 586.31, spouse_parents: 636.31, spouse_child: 628.31, child_only: 562.31 },
+                40: { single: 755.28, spouse: 838.28, spouse_parents: 904.28, spouse_child: 894.28, child_only: 806.28 },
+                50: { single: 1075.44, spouse: 1179.44, spouse_parents: 1262.44, spouse_child: 1249.44, child_only: 1139.44 },
+                60: { single: 1361.88, spouse: 1486.88, spouse_parents: 1586.88, spouse_child: 1570.88, child_only: 1438.88 },
+                70: { single: 1716.28, spouse: 1862.28, spouse_parents: 1979.28, r_child: 1960.28, child_only: 1806.28 },
+                80: { single: 1995.01, spouse: 2162.01, spouse_parents: 2295.01, spouse_child: 2274.01, child_only: 2097.01 },
+                90: { single: 2241.15, spouse: 2429.15, spouse_parents: 2579.15, spouse_child: 2555.15, child_only: 2356.15 },
+                100: { single: 3737.85, spouse: 4098.85, spouse_parents: 4298.85, spouse_child: 4268.85, child_only: 3948.85 }
+            };
+
+            const selectedRateTable = rates[roundedRating] || { single: 0, spouse: 0, spouse_parents: 0, spouse_child: 0, child_only: 0 };
+            const finalPay = selectedRateTable[dependencyType] || selectedRateTable['single'] || 0;
+
+            document.getElementById('estimatedPayDisplay').innerText = roundedRating === 0 ? "$0.00" : `$${finalPay.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+
+        function updateLabel(id, newVal) {
+            const index = activeDisabilities.findIndex(d => d.id === id);
+            if (index !== -1) {
+                activeDisabilities[index].label = newVal;
+            }
+        }
+
+        // Custom Helper to safely copy helper prompts to clipboard under iframe environments
+        function copyToClipboard(text) {
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            showCustomModal("Prompt Copied!", "The prompt has been copied to your clipboard. You can paste it directly into the Patriots Compass chatbot widget.", "success");
+        }
+    </script>
+
+    <!-- WaitWell Chatbot Integration Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- 1. The Chatbot Script -->
+    <script src="script.js"></script>
+    <!-- 2. Initialization Call -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof WaitWellChatbot !== 'undefined') {
+                WaitWellChatbot.init({
+                    apiUrl: 'https://api.waitwell.us',
+                    siteId: '416202, 416203, 416204, 416205, 416206, 416207, 416208, 416209, 416210, 416211, 416212, 416214, 416215, 416216, 416217, 416218, 416219, 416220, 416221, 416222, 416223, 416224, 416225, 41626, 416227, 416228, 416229, 416230, 416231, 416232, 416233, 416234, 416235, 416236, 416237, 416238, 416239, 416240, 416241, 416242, 416243, 416244, 416245, 416246, 416247, 416248, 416249, 416250, 416252, 416256, 416257, 416258, 416259, 416260, 416261, 416262',
+                    botId: 2,
+                    botName: 'Patriots Compass',
+                    enableBooking: false,
+                    primaryColor: '#184FA2',
+                    secondaryColor: '#B71F27',
+                    welcomeMessage: 'Welcome to the TVC Claims Department FAQ! I am Patriot Compass, your virtual assistant. How can I help you today?',
+                    placeholder: 'Ask me anything about the TVC Claims Department...',
+                    locale: 'en'
+                });
+            } else {
+                console.warn('WaitWellChatbot is not loaded. Please make sure script.js is available.');
+            }
+        });
+    </script>
+</body>
+</html>
