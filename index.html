@@ -114,7 +114,7 @@
                 
                 <div>
                     <h1 class="text-2xl md:text-2xl font-extrabold tracking-tight flex items-center gap-2">
-                        <span class="text-4xl bg-amber-500 text-slate-950 px-2 py-0.5 rounded font-bold uppercase tracking-widest hidden sm:inline-block">Accredited Portal</span>
+                        <span class="text-4xl bg-amber-500 text-slate-950 px-2 py-0.5 rounded font-bold uppercase tracking-widest hidden sm:inline-block">Advisor Portal</span>
                     </h1>
                     <p class="text-xs md:text-sm text-slate-300 font-medium">Claims Department Advisory Portal • Reference Manual Guide</p>
                 </div>
@@ -123,7 +123,7 @@
             <div class="flex items-center gap-3 self-stretch md:self-auto justify-between md:justify-end border-t border-slate-700 md:border-0 pt-3 md:pt-0">
                 <div class="text-left md:text-right hidden sm:block">
                     <span class="text-xs text-slate-400 block">Current Manual Version</span>
-                    <span class="text-sm font-semibold text-amber-400">JUL 2025 (FINAL)</span>
+                    <span class="text-sm font-semibold text-amber-400">JUL 2025 </span>
                 </div>
                 <div class="h-8 w-px bg-slate-700 hidden sm:block"></div>
                 <!-- Dynamic Search Manual -->
@@ -157,7 +157,7 @@
                     <i class="fa-solid fa-file-invoice text-base"></i> Forms & CFR Index
                 </button>
                 <button onclick="switchTab('ai-advisor')" id="tab-ai-advisor" class="tab-btn px-4 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-all duration-150 text-slate-600 hover:bg-slate-100 bg-[#184FA2]/10 hover:bg-[#184FA2]/20 text-[#184FA2]">
-                    <i class="fa-solid fa-compass text-base text-[#184FA2]"></i> Patriots Compass <span class="bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase animate-pulse">Bot</span>
+                    <i class="fa-solid fa-compass text-base text-[#184FA2]"></i> AI Claim Advisor <span class="bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase animate-pulse">ChatBot</span>
                 </button>
             </div>
         </div>
@@ -201,7 +201,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Accredited Advisors</span>
-                            <a href="https://www.va.gov/get-help-from-accredited-representative/find-rep/" class="text-2xl font-extrabold text-slate-900 mt-1 block">80+ Advisors</a>
+                            <a href="https://www.va.gov/get-help-from-accredited-representative/find-rep/" target="_blank" class="text-2xl font-extrabold text-slate-900 mt-1 block" title="Find a VA accredited representative or VSO">140+ Advisors</a>
                             <span class="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1">
                                 <i class="fa-solid fa-location-dot"></i> Statewide Coverage
                             </span>
@@ -215,7 +215,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Key Authority CFR</span>
-                            <a href="https://www.ecfr.gov/current/title-38" target="_blank" class="text-2xl font-extrabold text-slate-900 mt-1 block">Title 38 CFR</a>
+                            <a href="https://www.ecfr.gov/current/title-38" target="_blank" title="View Title 38 CFR" class="text-2xl font-extrabold text-slate-900 mt-1 block">Title 38 CFR</a>
                             <span class="text-xs text-blue-600 font-semibold mt-1 flex items-center gap-1">
                                 <i class="fa-solid fa-gavel"></i> Part 3 Adjudications
                             </span>
@@ -228,8 +228,8 @@
                 <div class="bg-blue-100 border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex justify-between items-start">
                         <div>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">System Access</span>
-                            <a href= "https://citrixaccess.va.gov/vpn/index_citrix_splash.html" target="_blank" class="text-2xl font-extrabold text-slate-900 mt-1 block">CITRIX</a>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">VA System Access</span>
+                            <a href= "https://citrixaccess.va.gov/vpn/index_citrix_splash.html" target="_blank" title="Access VA System" class="text-2xl font-extrabold text-slate-900 mt-1 block">CITRIX</a>
                             <span class="text-xs text-amber-600 font-semibold mt-1 flex items-center gap-1">
                                 <i class="fa-solid fa-network-wired"></i> Secure VA Access
                             </span>
@@ -242,8 +242,8 @@
                 <div class="bg-red-100 border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex justify-between items-start">
                         <div>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Appeals Level Option</span>
-                            <a href= "https://app.waitwell.us/login?target=%2Fqueue" target="_blank" class="text-2xl font-extrabold text-slate-900 mt-1 block">Waitwell</a>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Booking System Access</span>
+                            <a href= "https://app.waitwell.us/login?target=%2Fqueue" target="_blank" title="Access Booking System" class="text-2xl font-extrabold text-slate-900 mt-1 block">Waitwell</a>
                             <span class="text-xs text-indigo-600 font-semibold mt-1 flex items-center gap-1">
                                 <i class="fa-solid fa-shield-halved"></i> Modern Booking System
                             </span>
@@ -264,11 +264,25 @@
                         <i class="fa-solid fa-star text-9xl"></i>
                     </div>
                     <div>
-                        <span class="bg-amber-500 text-slate-950 text-[22px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-widest inline-block mb-3">STATE DECREE</span>
-                        <h2 class="text-3xl font-extrabold tracking-tight">Texas Veterans Commission Claims Division</h2>
+                        <span class="bg-amber-500 text-slate-950 text-[22px] font-extrabold uppercase px-2.5 py-1 rounded-md tracking-widest inline-block mb-3">DEPARTMENT MISSION STATEMENT</span>
                         <p class="text-slate-300 mt-3 text-xl leading-relaxed">
-                            Formed by the Texas Government Code Chapter 434 and governed by the Texas Sunset Act, TVC represents Texas Veterans, their families, and survivors before the United States Department of Veterans Affairs (VA). Our Claims Benefit Advisors (CBAs) are located across the state in regional offices, clinics, and military bases to prepare and submit high-quality, fully-developed claims.
+                             As the state-appointed advocate for veterans, our mission is to advocate for and provide superior service that will significantly improve the quality of life for all Texas veterans, their families, and survivors
                         </p>
+                       <div class="mt-6 space-y-3">
+                            <h4 class="font-bold text-slate-300 mt-3 text-xl leading-relaxed">Core Purpose & Services</h4>
+                            <div class="flex gap-2 items-start">
+                                <i class="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
+                                <span class="text-slate-300 text-xl">Assisting with filing applications for disability compensation, pensions, and survivor's benefits.</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <i class="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
+                                <span class="text-slate-300 text-xl">Representing veterans during the VA appeals process.</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <i class="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
+                                <span class="text-slate-300 text-xl">All claims representation and counseling services are offered to veterans and their families at absolutely no charge.</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-700 text-center">
                         <div>
@@ -276,12 +290,12 @@
                             <p class="text-xs text-slate-400 mt-1">Texas Veterans</p>
                         </div>
                         <div>
-                            <h5 class="text-amber-400 font-bold text-lg">80+</h5>
+                            <h5 class="text-amber-400 font-bold text-lg">140+</h5>
                             <p class="text-xs text-slate-400 mt-1">Accredited CBAs</p>
                         </div>
                         <div>
                             <h5 class="text-amber-400 font-bold text-lg">100%</h5>
-                            <p class="text-xs text-slate-400 mt-1">Veteran Focused</p>
+                            <p class="text-xs text-slate-400 mt-1">Veteran and Dependents Focused</p>
                         </div>
                     </div>
                 </div>
@@ -345,8 +359,8 @@
                         <i class="fa-solid fa-compass text-lg"></i>
                     </div>
                     <div>
-                        <h4 class="font-bold text-slate-900 group-hover:text-[#184FA2] text-sm">Patriots Compass Bot</h4>
-                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">Interact with Patriots Compass, our WaitWell integrated virtual assistant. Answering all TVC department and claims questions.</p>
+                        <h4 class="font-bold text-slate-900 group-hover:text-[#184FA2] text-sm">AI Claims Advisor ChatBot</h4>
+                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">Interact with our AI Claims Advisor ChatBot, our WaitWell integrated virtual assistant. Answering all TVC department and claims questions.</p>
                     </div>
                 </div>
             </div>
@@ -653,32 +667,32 @@
                             </thead>
                             <tbody class="divide-y divide-slate-100 text-slate-700">
                                 <tr>
-                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21-0966</td>
+                                    <td><a href="https://www.vba.va.gov/pubs/forms/VBA-21-0966-ARE.pdf" target="_blank" class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21-0966</a></td>
                                     <td class="py-3 px-2 font-semibold">Intent to File</td>
                                     <td class="py-3 px-2 text-slate-500">Saves retroactive effective date for up to 364 days before formal submission.</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21-526EZ</td>
+                                    <td><a href="https://www.vba.va.gov/pubs/forms/VBA-21-526EZ-ARE.pdf" target="_blank" class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21-526EZ</a></td>
                                     <td class="py-3 px-2 font-semibold">Application for Disability Compensation</td>
                                     <td class="py-3 px-2 text-slate-500">Primary form used for original, new, secondary, or increased claims.</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21-22</td>
+                                    <td><a href="https://www.vba.va.gov/pubs/forms/VBA-21-22-ARE.pdf" target="_blank" class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21-22</a></td>
                                     <td class="py-3 px-2 font-semibold">Appointment of VSO</td>
                                     <td class="py-3 px-2 text-slate-500">Formally designates TVC as your legal representative before the VA.</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21P-527EZ</td>
+                                    <td><a href="https://www.vba.va.gov/pubs/forms/VBA-21P-527EZ-ARE.pdf" target="_blank" class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 21P-527EZ</a></td>
                                     <td class="py-3 px-2 font-semibold">Application for Pension</td>
                                     <td class="py-3 px-2 text-slate-500">Claim form for war-time veterans meeting specific physical and income thresholds.</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 20-0995</td>
+                                    <td><a href="https://www.vba.va.gov/pubs/forms/VBA-20-0995-ARE.pdf" target="_blank" class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 20-0995</a></td>
                                     <td class="py-3 px-2 font-semibold">Supplemental Claim Application</td>
                                     <td class="py-3 px-2 text-slate-500">Filing for review under AMA when new and relevant evidence is discovered.</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 20-0996</td>
+                                    <td><a href="https://www.vba.va.gov/pubs/forms/VBA-20-0996-ARE.pdf" target="_blank" class="py-3 px-2 font-bold text-sky-700 whitespace-nowrap">Form 20-0996</a></td>
                                     <td class="py-3 px-2 font-semibold">Higher-Level Review (HLR)</td>
                                     <td class="py-3 px-2 text-slate-500">Request for a senior rater review of existing evidence with zero new documents allowed.</td>
                                 </tr>
@@ -695,17 +709,17 @@
                     <div class="space-y-4">
                         <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
                             <h4 class="text-xs font-bold text-slate-800 flex items-center justify-between">
-                                <span>38 CFR Part 3 (Adjudication)</span>
+                                <span><a href="https://www.ecfr.gov/current/title-38/chapter-I/part-3" target="_blank" class="text-sky-700 hover:underline" title="38 CFR Part 3 (Adjudication)">38 CFR Part 3 (Adjudication)</a></span>
                                 <span class="bg-amber-100 text-amber-800 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase">Critical</span>
                             </h4>
                             <p class="text-[11px] text-slate-500 mt-1">Defines rules for compensation, pension, death benefits, and general criteria of service connection.</p>
                         </div>
                         <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                            <h4 class="text-xs font-bold text-slate-800">38 CFR Part 4 (Schedule for Ratings)</h4>
+                            <h4 class="text-xs font-bold text-slate-800"><a href="https://www.ecfr.gov/current/title-38/chapter-I/part-4?toc=1" target="_blank" class="text-sky-700 hover:underline" title="38 CFR Part 4 (Schedule for Ratings)">38 CFR Part 4 (Schedule for Ratings)</a></h4>
                             <p class="text-[11px] text-slate-500 mt-1">Houses the actual tables and rating diagnostic codes used to evaluate specific diseases and injuries.</p>
                         </div>
                         <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                            <h4 class="text-xs font-bold text-slate-800">38 CFR Part 20 (Board Appeals)</h4>
+                            <h4 class="text-xs font-bold text-slate-800"><a href="https://www.ecfr.gov/current/title-38/chapter-I/part-20" target="_blank" class="text-sky-700 hover:underline" title="38 CFR Part 20 (Board Appeals)">38 CFR Part 20 (Board Appeals)</a></h4>
                             <p class="text-[11px] text-slate-500 mt-1">Establishes guidelines and procedures for appeals submitted to the Board of Veterans' Appeals (BVA).</p>
                         </div>
                     </div>
@@ -723,16 +737,16 @@
                             <i class="fa-solid fa-compass text-2xl"></i>
                         </div>
                         <span class="px-2.5 py-0.5 text-[10px] font-bold bg-[#184FA2]/10 text-[#184FA2] rounded-full uppercase tracking-wider">WaitWell Integration</span>
-                        <h3 class="text-lg font-extrabold text-slate-900 mt-2">Patriots Compass Bot</h3>
+                        <h3 class="text-lg font-extrabold text-slate-900 mt-2">AI Claims Advisor</h3>
                         <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-                            The Patriots Compass chatbot is officially integrated with the Texas Veterans Commission Claims Advisory Portal. Designed to provide instant support, Patriots Compass is fully customized with authorized TVC procedures and Title 38 CFR guidelines.
+                            The AI Claims Advisor chatbot is officially integrated with the Texas Veterans Commission Claims Advisory Portal. Designed to provide instant support, the AI Claims Advisor is fully customized with authorized TVC procedures and Title 38 CFR guidelines.
                         </p>
                         
                         <div class="mt-6 space-y-3">
                             <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Key Capabilities</h4>
                             <div class="flex gap-2 items-start">
                                 <i class="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
-                                <span class="text-xs text-slate-600">Answers TVC Claims Manual specific FAQs</span>
+                                <span class="text-xs text-slate-600">Answers TVC Claims Manual and policies specific FAQs</span>
                             </div>
                             <div class="flex gap-2 items-start">
                                 <i class="fa-solid fa-check text-emerald-500 text-xs mt-0.5"></i>
@@ -745,20 +759,14 @@
                         </div>
                     </div>
 
-                    <div class="pt-6 border-t border-slate-100 mt-6">
-                        <div class="bg-emerald-50 text-emerald-800 border border-emerald-200 p-3 rounded-xl flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
-                            <span class="text-xs font-bold">Patriot Compass Live Widget Connected</span>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Suggested Inquiries / Prompts Guide -->
                 <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
                     <h3 class="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-lightbulb text-amber-500"></i> Recommended Inquiries for Patriots Compass
+                        <i class="fa-solid fa-lightbulb text-amber-500"></i> Recommended Inquiries for AI Claims Advisor
                     </h3>
-                    <p class="text-xs text-slate-500">Copy any of these preset inquiries to paste directly into the Patriots Compass chat widget floating on your screen.</p>
+                    <p class="text-xs text-slate-500">Copy any of these preset inquiries to paste directly into the AI Claims Advisor chat widget floating on your screen.</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                         <div class="p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all relative group">
@@ -797,9 +805,27 @@
                     <div class="p-4 bg-blue-50 border-l-4 border-[#184FA2] rounded-r-xl mt-6">
                         <span class="text-xs font-bold text-[#184FA2] block">Advisory Note</span>
                         <p class="text-[11px] text-slate-700 leading-relaxed mt-1">
-                            Patriots Compass virtual assistant processes questions using WaitWell API integrations. Ensure you do not submit personally identifiable information (PII) like full SSNs or complete health records during chat sessions.
+                            The AI Claims Advisor virtual assistant processes questions using official TVC and VA documentation. It is not a substitute for professional claims representation. Always verify information as an accredited TVC advisors or official VA resources.
                         </p>
                     </div>
+                      <!-- WaitWell Location Map Embed -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                    <i class="fa-solid fa-map-location-dot text-amber-500"></i> AI Claims Advisor Chat
+                </h3>
+                <p class="text-xs text-slate-600 mb-4">Help answer questions about Texas Veterans Commission Claims Benefit Advisors and policies.</p>
+                <div class="w-full rounded-lg overflow-hidden border border-slate-200" style="height: 500px;">
+                    <iframe 
+                        src="https://www.stackai.com/chat/69b442574c428eb1a83465ed-0VgIuZT8BKgKk0mh4UHf00" 
+                        width="100%" 
+                        height="100%" 
+                        frameborder="0" 
+                        style="border: none; border-radius: 8px;"
+                        title="WaitWell Interactive Map">
+                    </iframe>
+                </div>
+            </div>
+        </div>
                 </div>
             </div>
         </div>
@@ -1477,7 +1503,7 @@
             dummy.select();
             document.execCommand("copy");
             document.body.removeChild(dummy);
-            showCustomModal("Prompt Copied!", "The prompt has been copied to your clipboard. You can paste it directly into the Patriots Compass chatbot widget.", "success");
+            showCustomModal("Prompt Copied!", "The prompt has been copied to your clipboard. You can paste it directly into the AI Claims Advisor chatbot widget.", "success");
         }
     </script>
 
@@ -1486,25 +1512,6 @@
     <!-- 1. The Chatbot Script -->
     <script src="script.js"></script>
     <!-- 2. Initialization Call -->
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            if (typeof WaitWellChatbot !== 'undefined') {
-                WaitWellChatbot.init({
-                    apiUrl: 'https://api.waitwell.us',
-                    siteId: '416202, 416203, 416204, 416205, 416206, 416207, 416208, 416209, 416210, 416211, 416212, 416214, 416215, 416216, 416217, 416218, 416219, 416220, 416221, 416222, 416223, 416224, 416225, 41626, 416227, 416228, 416229, 416230, 416231, 416232, 416233, 416234, 416235, 416236, 416237, 416238, 416239, 416240, 416241, 416242, 416243, 416244, 416245, 416246, 416247, 416248, 416249, 416250, 416252, 416256, 416257, 416258, 416259, 416260, 416261, 416262',
-                    botId: 2,
-                    botName: 'Patriots Compass',
-                    enableBooking: false,
-                    primaryColor: '#184FA2',
-                    secondaryColor: '#B71F27',
-                    welcomeMessage: 'Welcome to the TVC Claims Department FAQ! I am Patriot Compass, your virtual assistant. How can I help you today?',
-                    placeholder: 'Ask me anything about the TVC Claims Department...',
-                    locale: 'en'
-                });
-            } else {
-                console.warn('WaitWellChatbot is not loaded. Please make sure script.js is available.');
-            }
-        });
-    </script>
+    
 </body>
 </html>
