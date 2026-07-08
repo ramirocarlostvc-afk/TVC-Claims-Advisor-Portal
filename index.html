@@ -512,7 +512,7 @@
 
                     <!-- Dependency Information Setup -->
                     <div class="pt-4 border-t border-slate-100 space-y-3">
-                        <span class="text-xs font-bold text-slate-600 uppercase tracking-wider block">Est. 2026 Compensation Parameters</span>
+                        <span class="text-xs font-bold text-slate-600 uppercase tracking-wider block">2026 Compensation Parameters</span>
                         <div>
                             <label class="text-[11px] text-slate-500 block">Dependents Status</label>
                             <select id="dependentStatus" onchange="calculateVAMath()" class="w-full mt-1 p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
@@ -560,9 +560,9 @@
                         <div class="flex items-start justify-between gap-3">
                             <div>
                                 <h4 class="font-bold text-slate-900 text-sm mb-1 flex items-center gap-2">
-                                    <i class="fa-solid fa-file-lines text-amber-600"></i> State Benefits from Source Flyer
+                                    <i class="fa-solid fa-file-lines text-amber-600"></i> State Benefits
                                 </h4>
-                                <p class="text-xs text-slate-500">This section loads the state benefits flyer from the local sources folder and matches the benefits to your current combined rounded rating.</p>
+                                <p class="text-xs text-slate-500">This section displays the Texas state benefits based on the current combined rounded rating. Click here to download the official <a href="https://tvc.texas.gov/wp-content/uploads/2026/01/2026_27-TVC-State-Benefits-Booklet.pdf" target="_blank" class="text-amber-600 hover:underline">2026 State Benefits Booklet</a></p>
                             </div>
                             <div class="bg-amber-50 text-amber-700 text-[10px] font-bold uppercase px-2 py-1 rounded-full">Live</div>
                         </div>
@@ -1487,16 +1487,16 @@
             // Est. 2026 Monthly Comp Rates (Simple Approximation for Demo purposes based on official 2026 COLA stats)
             const dependencyType = document.getElementById('dependentStatus').value;
             const rates = {
-                10: { single: 171.23, spouse: 171.23, spouse_parents: 171.23, spouse_child: 171.23, child_only: 171.23 },
-                20: { single: 338.49, spouse: 338.49, spouse_parents: 338.49, spouse_child: 338.49, child_only: 338.49 },
-                30: { single: 524.31, spouse: 586.31, spouse_parents: 636.31, spouse_child: 628.31, child_only: 562.31 },
-                40: { single: 755.28, spouse: 838.28, spouse_parents: 904.28, spouse_child: 894.28, child_only: 806.28 },
-                50: { single: 1075.44, spouse: 1179.44, spouse_parents: 1262.44, spouse_child: 1249.44, child_only: 1139.44 },
-                60: { single: 1361.88, spouse: 1486.88, spouse_parents: 1586.88, spouse_child: 1570.88, child_only: 1438.88 },
-                70: { single: 1716.28, spouse: 1862.28, spouse_parents: 1979.28, r_child: 1960.28, child_only: 1806.28 },
-                80: { single: 1995.01, spouse: 2162.01, spouse_parents: 2295.01, spouse_child: 2274.01, child_only: 2097.01 },
-                90: { single: 2241.15, spouse: 2429.15, spouse_parents: 2579.15, spouse_child: 2555.15, child_only: 2356.15 },
-                100: { single: 3737.85, spouse: 4098.85, spouse_parents: 4298.85, spouse_child: 4268.85, child_only: 3948.85 }
+                10: { single: 180.42, spouse: 180.42, spouse_parents: 180.42, spouse_child: 180.42, child_only: 180.42 },
+                20: { single: 356.66, spouse: 356.66, spouse_parents: 356.66, spouse_child: 356.66, child_only: 356.66 },
+                30: { single: 552.47, spouse: 617.47, spouse_parents: 669.47, spouse_child: 666.47, child_only: 596.47 },
+                40: { single: 795.84, spouse: 882.84, spouse_parents: 952.84, spouse_child: 947.84, child_only: 853.84 },
+                50: { single: 1132.90, spouse: 1241.90, spouse_parents: 1329.90, spouse_child: 1322.90, child_only: 1205.90 },
+                60: { single: 1435.02, spouse: 1566.02, spouse_parents: 1671.02, spouse_child: 163.02, child_only: 1523.02 },
+                70: { single: 1808.45, spouse: 1961.45, spouse_parents: 2084.45, spouse_child: 2074.45, child_only: 1910.45 },
+                80: { single: 2102.15, spouse: 2277.15, spouse_parents: 2417.15, spouse_child: 2406.15, child_only: 2219.15 },
+                90: { single: 2362.30, spouse: 2559.30, spouse_parents: 2717.30, spouse_child: 2704.30, child_only: 2494.30 },
+                100: { single: 3938.58, spouse: 4158.17, spouse_parents: 4334.41, spouse_child: 4318.99, child_only: 4085.43 }
             };
 
             const selectedRateTable = rates[roundedRating] || { single: 0, spouse: 0, spouse_parents: 0, spouse_child: 0, child_only: 0 };
